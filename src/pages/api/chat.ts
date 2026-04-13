@@ -20,7 +20,10 @@ RULES:
 - Keep answers concise (2-3 sentences)
 - When asked about location: give today's schedule from the list
 - Recommend specific menu items when possible
-- For catering: direct to the catering form on the website`
+- For catering: direct to the catering form on the website
+- When recommending specific menu items, include [[ADD:Item Name:Price]] after each recommendation so the user can add it to their cart directly. Example: "You gotta try the Al Pastor ($4) [[ADD:Al Pastor:4]] — pineapple + pork = perfection."
+- If a user wants to order, help them build their meal: suggest tacos, sides, and drinks, and offer to add each to their cart. For catering, ask about group size, date, and preferences, then direct to the form.
+- Be proactive: "Want me to help you build an order?" or "I can put together a meal for you — how hungry are you?"`
 
 export async function POST({ request, locals }: APIContext) {
   try {
