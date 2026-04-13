@@ -65,6 +65,7 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
               <span class="text-lime font-bold">{item.price}</span>
             </div>
             <p class="text-sm text-muted mt-1">{item.description}</p>
+            <button data-add-item data-name={item.name} data-price={item.price.replace('$','')} data-label="Add" class="mt-2 rounded-lg bg-lime/20 text-lime text-xs font-bold px-3 py-1.5 hover:bg-lime/30 transition-colors">Add</button>
           </div>
         ))}
       </div>
@@ -78,6 +79,7 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
               <span class="text-lime font-bold">{item.price}</span>
             </div>
             <p class="text-sm text-muted mt-1">{item.description}</p>
+            <button data-add-item data-name={item.name} data-price={item.price.replace('$','')} data-label="Add" class="mt-2 rounded-lg bg-lime/20 text-lime text-xs font-bold px-3 py-1.5 hover:bg-lime/30 transition-colors">Add</button>
           </div>
         ))}
       </div>
@@ -91,6 +93,7 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
               <span class="text-lime font-bold">{item.price}</span>
             </div>
             <p class="text-sm text-muted mt-1">{item.description}</p>
+            <button data-add-item data-name={item.name} data-price={item.price.replace('$','')} data-label="Add" class="mt-2 rounded-lg bg-lime/20 text-lime text-xs font-bold px-3 py-1.5 hover:bg-lime/30 transition-colors">Add</button>
           </div>
         ))}
       </div>
@@ -184,6 +187,19 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
       </form>
     </div>
   </section>
+
+  <script>
+    document.querySelectorAll('[data-add-item]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        const name = el.dataset.name!;
+        const price = el.dataset.price!;
+        (window as any).addToCart(name, price);
+        el.textContent = 'Added!';
+        setTimeout(() => { el.textContent = el.dataset.label || 'Add'; }, 1000);
+      });
+    });
+  </script>
 
   <script>
     document.getElementById('catering-form')?.addEventListener('submit', (e) => {
