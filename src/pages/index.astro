@@ -1,0 +1,215 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { SITE, MENU, SCHEDULE, DELIVERY, CATERING } from '../lib/config'
+
+const tacos = MENU.filter(m => m.category === 'Tacos')
+const sides = MENU.filter(m => m.category === 'Sides' || m.category === 'Dessert')
+const drinks = MENU.filter(m => m.category === 'Drinks')
+---
+
+<Layout>
+  <!-- Hero -->
+  <section class="relative h-[65vh] flex items-center justify-center overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=1600&q=80" alt="Street tacos" class="absolute inset-0 w-full h-full object-cover brightness-[0.35]" loading="eager" />
+    <div class="relative text-center px-6">
+      <h1 class="text-6xl md:text-8xl font-black text-warm-white tracking-tight">🌮 <span class="text-lime">TACO</span> LOCO</h1>
+      <p class="mt-3 text-xl text-warm-white/80">{SITE.tagline}</p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="#schedule" class="rounded-lg bg-lime px-8 py-3 font-bold text-dark hover:bg-lime-dark transition-colors">Where Are We Today?</a>
+        <a href="#menu" class="rounded-lg bg-hot-orange px-8 py-3 font-bold text-white hover:bg-hot-orange-dark transition-colors">See the Menu</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inline AI -->
+  <section class="bg-dark py-5 px-6">
+    <div class="mx-auto max-w-xl">
+      <div class="flex gap-2">
+        <input id="ai-ask" type="text" placeholder="Where are you today? What's the spiciest taco? Do you cater?" class="flex-1 rounded-lg bg-dark-lighter border border-muted/30 px-5 py-3 text-sm text-warm-white placeholder:text-muted focus:border-lime focus:outline-none" />
+        <button id="ai-send" class="rounded-lg bg-lime px-5 py-3 text-sm font-bold text-dark hover:bg-lime-dark transition-colors">Ask</button>
+      </div>
+      <div id="ai-response" class="hidden mt-3 rounded-lg bg-dark-lighter border border-muted/20 p-4 text-sm text-warm-white leading-relaxed"></div>
+    </div>
+  </section>
+
+  <!-- Schedule -->
+  <section id="schedule" class="py-16 px-6">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="text-3xl font-black text-center mb-2">Find the Truck</h2>
+      <p class="text-center text-muted text-sm mb-8">This week's schedule. Follow {SITE.instagram} for real-time updates.</p>
+      <div class="space-y-2">
+        {SCHEDULE.map((s) => (
+          <div class="flex items-center justify-between rounded-xl border border-dark/10 bg-white px-5 py-4">
+            <div>
+              <h3 class="font-bold text-dark">{s.day}</h3>
+              <p class="text-sm text-muted">{s.location}</p>
+            </div>
+            <span class="text-sm font-mono font-bold text-lime-dark">{s.time}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu -->
+  <section id="menu" class="py-16 px-6 bg-dark text-warm-white">
+    <div class="mx-auto max-w-4xl">
+      <h2 class="text-3xl font-black text-center text-lime mb-8">The Menu</h2>
+
+      <h3 class="text-lg font-bold text-hot-orange mb-3">🌮 Tacos</h3>
+      <div class="grid sm:grid-cols-2 gap-3 mb-8">
+        {tacos.map((item) => (
+          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4">
+            <div class="flex justify-between items-start">
+              <h4 class="font-bold text-warm-white">{item.name} {item.spicy ? '🔥' : ''}</h4>
+              <span class="text-lime font-bold">{item.price}</span>
+            </div>
+            <p class="text-sm text-muted mt-1">{item.description}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="text-lg font-bold text-hot-orange mb-3">🍟 Sides & Dessert</h3>
+      <div class="grid sm:grid-cols-2 gap-3 mb-8">
+        {sides.map((item) => (
+          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4">
+            <div class="flex justify-between items-start">
+              <h4 class="font-bold text-warm-white">{item.name}</h4>
+              <span class="text-lime font-bold">{item.price}</span>
+            </div>
+            <p class="text-sm text-muted mt-1">{item.description}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="text-lg font-bold text-hot-orange mb-3">🥤 Drinks</h3>
+      <div class="grid sm:grid-cols-2 gap-3">
+        {drinks.map((item) => (
+          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4">
+            <div class="flex justify-between items-start">
+              <h4 class="font-bold text-warm-white">{item.name}</h4>
+              <span class="text-lime font-bold">{item.price}</span>
+            </div>
+            <p class="text-sm text-muted mt-1">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Order / Delivery -->
+  <section id="order" class="py-16 px-6">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-black mb-2">Order Delivery</h2>
+      <p class="text-muted text-sm mb-8">Can't make it to the truck? We deliver through these apps.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        {DELIVERY.map((app) => (
+          <a href={app.url} class="flex-1 rounded-xl border-2 px-6 py-4 font-bold text-center hover:shadow-lg transition-shadow" style={`border-color: ${app.color}; color: ${app.color};`}>
+            {app.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="py-16 px-6 bg-dark">
+    <div class="mx-auto max-w-6xl">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&q=80" alt="Tacos" class="rounded-lg aspect-square object-cover" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?w=400&q=80" alt="Street food" class="rounded-lg aspect-square object-cover" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1624300629298-e9de39c13be5?w=400&q=80" alt="Elote" class="rounded-lg aspect-square object-cover" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" alt="Food prep" class="rounded-lg aspect-square object-cover" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Catering -->
+  <section id="catering" class="py-16 px-6">
+    <div class="mx-auto max-w-2xl">
+      <h2 class="text-3xl font-black text-center mb-2">Cater Your Event</h2>
+      <p class="text-center text-muted text-sm mb-8">Weddings, corporate lunches, birthdays, block parties. We bring the truck to you.</p>
+
+      <div class="rounded-xl border border-dark/10 bg-white p-6 mb-6">
+        <div class="grid sm:grid-cols-3 gap-4 text-center text-sm">
+          <div>
+            <p class="font-bold text-dark text-lg">{CATERING.pricePerPerson}</p>
+            <p class="text-muted">per person</p>
+          </div>
+          <div>
+            <p class="font-bold text-dark text-lg">{CATERING.minGuests}+</p>
+            <p class="text-muted">minimum guests</p>
+          </div>
+          <div>
+            <p class="font-bold text-dark text-lg">All-inclusive</p>
+            <p class="text-muted">setup + cleanup</p>
+          </div>
+        </div>
+        <p class="text-sm text-muted mt-4 text-center">{CATERING.includes}</p>
+      </div>
+
+      <form id="catering-form" class="space-y-4 rounded-xl border border-dark/10 bg-white p-6">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Name</label>
+            <input type="text" name="name" required class="w-full rounded-lg border border-dark/10 px-4 py-2.5 text-sm focus:border-lime focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Email</label>
+            <input type="email" name="email" required class="w-full rounded-lg border border-dark/10 px-4 py-2.5 text-sm focus:border-lime focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Event Date</label>
+            <input type="date" name="date" required class="w-full rounded-lg border border-dark/10 px-4 py-2.5 text-sm focus:border-lime focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Headcount</label>
+            <select name="headcount" required class="w-full rounded-lg border border-dark/10 px-4 py-2.5 text-sm focus:border-lime focus:outline-none">
+              <option value="">Select...</option>
+              <option value="20-40">20–40</option>
+              <option value="40-75">40–75</option>
+              <option value="75-150">75–150</option>
+              <option value="150+">150+</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Event Details</label>
+          <textarea name="details" rows="3" placeholder="Type of event, location, any dietary needs..." class="w-full rounded-lg border border-dark/10 px-4 py-2.5 text-sm focus:border-lime focus:outline-none"></textarea>
+        </div>
+        <button type="submit" class="w-full rounded-lg bg-hot-orange px-6 py-3 font-bold text-white hover:bg-hot-orange-dark transition-colors">Get a Catering Quote</button>
+        <div id="form-status" class="hidden rounded-lg p-3 text-center text-sm"></div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('catering-form')?.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const status = document.getElementById('form-status')!
+      status.textContent = 'Got it! We\'ll send you a quote within 24 hours. 🌮'
+      status.className = 'rounded-lg bg-lime/10 border border-lime/30 p-3 text-center text-sm text-lime-dark'
+      ;(e.target as HTMLFormElement).querySelectorAll('input, select, textarea, button').forEach(el => (el as HTMLInputElement).disabled = true)
+    })
+
+    // Inline AI
+    const aiInput = document.getElementById('ai-ask') as HTMLInputElement
+    const aiSend = document.getElementById('ai-send')!
+    const aiResponse = document.getElementById('ai-response')!
+    async function askAI() {
+      const text = aiInput.value.trim()
+      if (!text) return
+      aiResponse.textContent = 'Checking...'
+      aiResponse.classList.remove('hidden')
+      try {
+        const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text }) })
+        const data = await res.json()
+        aiResponse.textContent = data.reply || 'Not sure about that — check our schedule or give us a call!'
+      } catch { aiResponse.textContent = 'Something went wrong. DM us on Instagram!' }
+    }
+    aiSend.addEventListener('click', askAI)
+    aiInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') askAI() })
+  </script>
+</Layout>

@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-lime: #84CC16;
+  --color-lime-dark: #65A30D;
+  --color-hot-orange: #F97316;
+  --color-hot-orange-dark: #EA580C;
+  --color-dark: #18181B;
+  --color-dark-lighter: #27272A;
+  --color-warm-white: #FAFAFA;
+  --color-muted: #A1A1AA;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, sans-serif; color: #18181B; }
