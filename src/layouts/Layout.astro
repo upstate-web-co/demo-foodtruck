@@ -14,6 +14,9 @@ const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos 
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1519741497674-611481863552?w=1200<meta name="robots" content="noindex, nofollow" />q=80" />
   <link rel="preconnect" href="https://images.unsplash.com" />
 </head>
 <body class="bg-warm-white text-dark antialiased">
@@ -27,8 +30,23 @@ const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos 
         <a href="#catering" class="text-muted hover:text-lime transition-colors">Catering</a>
         <a href="#order" class="rounded-lg bg-lime px-4 py-2 text-dark hover:bg-lime-dark transition-colors">Order Now</a>
       </div>
+      <button id="mobile-menu-btn" class="md:hidden text-warm-white" aria-label="Open menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile menu overlay -->
+  <div id="mobile-menu" class="hidden fixed inset-0 z-[60] flex-col items-center justify-center gap-6 bg-dark text-warm-white">
+    <button id="mobile-menu-close" class="absolute top-4 right-6 text-warm-white" aria-label="Close menu">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <a href="#menu" class="text-xl font-medium text-muted hover:text-lime transition-colors">Menu</a>
+    <a href="#schedule" class="text-xl font-medium text-muted hover:text-lime transition-colors">Find Us</a>
+    <a href="#order" class="text-xl font-medium text-muted hover:text-lime transition-colors">Order</a>
+    <a href="#catering" class="text-xl font-medium text-muted hover:text-lime transition-colors">Catering</a>
+    <a href="#order" class="mt-2 rounded-lg bg-lime px-6 py-3 text-lg font-bold text-dark hover:bg-lime-dark transition-colors">Order Now</a>
+  </div>
   <main><slot /></main>
 
   <!-- Demo Disclaimer -->
@@ -65,5 +83,13 @@ const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos 
       </div>
     </div>
   </footer>
+  <script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const close = document.getElementById('mobile-menu-close');
+    btn?.addEventListener('click', () => menu?.classList.replace('hidden', 'flex'));
+    close?.addEventListener('click', () => menu?.classList.replace('flex', 'hidden'));
+    menu?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu?.classList.replace('flex', 'hidden')));
+  </script>
 </body>
 </html>
