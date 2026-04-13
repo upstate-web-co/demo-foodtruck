@@ -1,7 +1,7 @@
 import type { APIContext } from 'astro'
 import { SITE, MENU, SCHEDULE, CATERING } from '../../lib/config'
 
-const SYSTEM_PROMPT = `You are the AI assistant for ${SITE.name}, a street taco food truck in Greenville, SC.
+const SYSTEM_PROMPT = `You are the AI assistant for ${SITE.name}, a street taco food truck.
 
 MENU:
 ${MENU.map(m => `- ${m.name} (${m.category}) — ${m.price} — ${m.description}${m.spicy ? ' 🔥 SPICY' : ''}`).join('\n')}

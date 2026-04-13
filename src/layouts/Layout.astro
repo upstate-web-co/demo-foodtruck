@@ -3,7 +3,7 @@ import '../styles/global.css'
 import { SITE } from '../lib/config'
 
 interface Props { title?: string; description?: string }
-const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos in Greenville, SC. Find our truck, see the menu, order for catering.` } = Astro.props
+const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos around town. Find our truck, see the menu, order for catering.` } = Astro.props
 ---
 
 <!doctype html>
@@ -13,12 +13,13 @@ const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://images.unsplash.com" />
 </head>
 <body class="bg-warm-white text-dark antialiased">
   <nav class="sticky top-0 z-50 bg-dark text-warm-white">
     <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-3">
-      <a href="/" class="text-xl font-black tracking-tight">🌮 <span class="text-lime">TACO</span> LOCO</a>
+      <a href="/" class="text-xl font-black tracking-tight">🌮 <span class="text-lime">CALICO</span> TACO</a>
       <div class="hidden md:flex items-center gap-5 text-sm font-medium">
         <a href="#menu" class="text-muted hover:text-lime transition-colors">Menu</a>
         <a href="#schedule" class="text-muted hover:text-lime transition-colors">Find Us</a>
@@ -33,7 +34,7 @@ const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos 
   <!-- Demo Disclaimer -->
   <div class="bg-yellow-50 border-y border-yellow-200 py-3 px-6 text-center">
     <p class="text-xs text-yellow-800">
-      <strong>Portfolio Demo</strong> — This is a sample site built by <a href="https://upstate-web.com" class="underline hover:text-yellow-900">Upstate Web Co</a> to showcase what we build for this industry. This is not a real business.
+      <strong>Portfolio Demo</strong> — This is a fictional business created by <a href="https://upstate-web.com" class="underline hover:text-yellow-900">Upstate Web Co</a>. All names, locations, and details are entirely fictional.
     </p>
   </div>
 
@@ -41,7 +42,7 @@ const { title = `${SITE.name} — ${SITE.tagline}`, description = `Street tacos 
     <div class="mx-auto max-w-6xl px-6 py-10">
       <div class="grid md:grid-cols-3 gap-8">
         <div>
-          <p class="text-xl font-black text-warm-white">🌮 <span class="text-lime">TACO</span> LOCO</p>
+          <p class="text-xl font-black text-warm-white">🌮 <span class="text-lime">CALICO</span> TACO</p>
           <p class="text-sm mt-2">{SITE.tagline}</p>
         </div>
         <div class="text-sm">
