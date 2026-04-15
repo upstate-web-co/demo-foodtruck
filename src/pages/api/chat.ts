@@ -1,7 +1,7 @@
 import type { APIContext } from 'astro'
 import { SITE, MENU, SCHEDULE, CATERING } from '../../lib/config'
 
-const SYSTEM_PROMPT = `You are the AI assistant for ${SITE.name}, a street taco food truck.
+const SYSTEM_PROMPT = `You are the AI assistant for ${SITE.name}, a street taco food truck in Greenville, SC.
 
 MENU:
 ${MENU.map(m => `- ${m.name} (${m.category}) — ${m.price} — ${m.description}${m.spicy ? ' 🔥 SPICY' : ''}`).join('\n')}
@@ -18,17 +18,15 @@ INSTAGRAM: ${SITE.instagram} — follow for real-time location updates
 RULES:
 - Be fun, casual, and enthusiastic about tacos
 - Keep answers concise (2-3 sentences)
-- CONVERSATION STYLE: When gathering information from the user, ask only 2-3 related questions at a time, then wait for their response before asking more. Never list more than 3 questions in a single message. Keep it conversational — like a friendly human, not a form.
 - When asked about location: give today's schedule from the list
 - Recommend specific menu items when possible
-- For catering: direct to the catering form on the website
-- When recommending specific menu items, include [[ADD:Item Name:Price]] after each recommendation so the user can add it to their cart directly. Example: "You gotta try the Al Pastor ($4) [[ADD:Al Pastor:4]] — pineapple + pork = perfection."
-- If a user wants to order, help them build their meal: suggest tacos, sides, and drinks, and offer to add each to their cart. For catering, ask about group size, date, and preferences, then direct to the form.
-- Be proactive: "Want me to help you build an order?" or "I can put together a meal for you — how hungry are you?"`
+- For catering: direct to the catering form on the website`
 
 export async function POST({ request, locals }: APIContext) {
   try {
-    const { message, history = [] } = await request.json() as { message?: string; history?: Array<{ role: string; content: string }> }
+    const body = await request.json()
+    const message = body.message || ''
+    const history: Array<{role: string; content: string}> = body.history || []
     if (!message) return Response.json({ reply: 'Yo! Ask about the menu, where we are today, or catering. 🌮' })
 
     const env = (locals as Record<string, any>).runtime?.env
@@ -52,7 +50,10 @@ export async function POST({ request, locals }: APIContext) {
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 256, system: SYSTEM_PROMPT, messages: [...history.slice(-20).map(h => ({ role: h.role as 'user' | 'assistant', content: h.content })), { role: 'user' as const, content: message }] }),
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001', max_tokens: 300, system: SYSTEM_PROMPT,
+        messages: [...history.slice(-18).map((h: {role: string; content: string}) => ({ role: h.role, content: h.content })), { role: 'user', content: message }],
+      }),
     })
     const data = await response.json() as { content?: { text: string }[] }
     return Response.json({ reply: data.content?.[0]?.text || 'Not sure about that — DM us on Instagram!' })

@@ -5,29 +5,54 @@ import { SITE, MENU, SCHEDULE, DELIVERY, CATERING } from '../lib/config'
 const tacos = MENU.filter(m => m.category === 'Tacos')
 const sides = MENU.filter(m => m.category === 'Sides' || m.category === 'Dessert')
 const drinks = MENU.filter(m => m.category === 'Drinks')
+
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const today = days[new Date().getDay()]
+const todaySchedule = SCHEDULE.find(s => s.day === today)
 ---
 
 <Layout>
   <!-- Hero -->
   <section class="relative h-[65vh] flex items-center justify-center overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=1200&q=75&auto=format" alt="Street tacos" class="absolute inset-0 w-full h-full object-cover brightness-[0.35]" loading="eager" width="1200" height="800" fetchpriority="high" />
+    <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=1600&q=80" alt="Street tacos" class="absolute inset-0 w-full h-full object-cover brightness-[0.35]" loading="eager" />
     <div class="relative text-center px-6">
-      <h1 class="text-6xl md:text-8xl font-black text-warm-white tracking-tight">🌮 <span class="text-lime">CALICO</span> TACO</h1>
+      <h1 class="text-6xl md:text-8xl font-black text-warm-white tracking-tight">🌮 <span class="text-lime">TACO</span> LOCO</h1>
       <p class="mt-3 text-xl text-warm-white/80">{SITE.tagline}</p>
       <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
         <a href="#schedule" class="rounded-lg bg-lime px-8 py-3 font-bold text-dark hover:bg-lime-dark transition-colors">Where Are We Today?</a>
         <a href="#menu" class="rounded-lg bg-hot-orange px-8 py-3 font-bold text-white hover:bg-hot-orange-dark transition-colors">See the Menu</a>
       </div>
+      {todaySchedule && (
+        <div class="mt-6 inline-flex items-center gap-3 bg-dark/60 backdrop-blur-sm rounded-xl px-5 py-3">
+          <span class="text-lime text-lg">📍</span>
+          <div class="text-left">
+            <p class="text-xs text-lime font-bold uppercase tracking-wide">Today — {today}</p>
+            <p class="text-sm text-warm-white">{todaySchedule.location} · {todaySchedule.time}</p>
+          </div>
+        </div>
+      )}
     </div>
   </section>
 
-  <!-- AI Chat -->
-  <section class="bg-dark py-5 px-6">
+  <!-- Inline AI Chat -->
+  <section class="bg-dark py-8 px-6">
     <div class="mx-auto max-w-xl">
-      <div id="chat-container" class="rounded-lg border border-muted/20 bg-dark-lighter overflow-hidden">
+      <div class="flex items-center gap-3 mb-4">
+        <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=200&q=80" alt="Taco Loco" class="w-12 h-12 rounded-full object-cover border-2 border-lime/30 shadow-sm" />
+        <div>
+          <p class="text-sm font-bold text-warm-white">Ask Taco Loco</p>
+          <p class="text-xs text-muted">Where we are, menu, catering, allergens</p>
+        </div>
+      </div>
+      <div class="rounded-xl border border-muted/20 bg-dark-lighter overflow-hidden">
         <div id="chat-messages" class="hidden max-h-80 overflow-y-auto px-4 pt-4 pb-2 space-y-3"></div>
-        <div id="chat-input-bar" class="flex gap-2 p-3">
-          <input id="chat-input" type="text" placeholder="Where are you today? What's the spiciest taco? Do you cater?" class="flex-1 rounded-lg bg-dark border border-muted/30 px-5 py-2.5 text-sm text-warm-white placeholder:text-muted focus:border-lime focus:outline-none" />
+        <div id="chat-quick" class="flex gap-2 px-3 py-2.5 overflow-x-auto border-b border-muted/15">
+          <button class="chat-q shrink-0 rounded-full border border-lime/25 bg-lime/10 px-3 py-1.5 text-xs font-bold text-lime hover:bg-lime/20 transition-colors" data-msg="Where are you today?">📍 Today</button>
+          <button class="chat-q shrink-0 rounded-full border border-lime/25 bg-lime/10 px-3 py-1.5 text-xs font-bold text-lime hover:bg-lime/20 transition-colors" data-msg="What's your spiciest taco?">🔥 Spicy</button>
+          <button class="chat-q shrink-0 rounded-full border border-lime/25 bg-lime/10 px-3 py-1.5 text-xs font-bold text-lime hover:bg-lime/20 transition-colors" data-msg="Do you cater events?">🚚 Catering</button>
+        </div>
+        <div class="flex gap-2 p-3">
+          <input id="chat-input" type="text" placeholder="Ask about location, menu, catering..." maxlength="500" autocomplete="off" class="flex-1 rounded-lg bg-dark border border-muted/25 px-5 py-2.5 text-sm text-warm-white placeholder:text-muted focus:border-lime focus:outline-none" />
           <button id="chat-send" class="rounded-lg bg-lime px-5 py-2.5 text-sm font-bold text-dark hover:bg-lime-dark transition-colors">Ask</button>
         </div>
       </div>
@@ -37,14 +62,17 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
   <!-- Schedule -->
   <section id="schedule" class="py-16 px-6">
     <div class="mx-auto max-w-3xl">
-      <h2 class="text-3xl font-black text-center mb-2">Find the Truck</h2>
+      <h2 class="reveal text-3xl font-black text-center mb-2">Find the Truck</h2>
       <p class="text-center text-muted text-sm mb-8">This week's schedule. Follow {SITE.instagram} for real-time updates.</p>
       <div class="space-y-2">
         {SCHEDULE.map((s) => (
-          <div class="flex items-center justify-between rounded-xl border border-dark/10 bg-white px-5 py-4">
-            <div>
-              <h3 class="font-bold text-dark">{s.day}</h3>
-              <p class="text-sm text-muted">{s.location}</p>
+          <div class={`flex items-center justify-between rounded-xl border px-5 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${s.day === today ? 'border-lime bg-lime/5 ring-1 ring-lime/20' : 'border-dark/10 bg-white hover:border-lime/20'}`}>
+            <div class="flex items-center gap-3">
+              {s.day === today && <span class="w-2.5 h-2.5 rounded-full bg-lime animate-pulse shrink-0"></span>}
+              <div>
+                <h3 class="font-bold text-dark">{s.day} {s.day === today && <span class="text-xs font-bold text-lime ml-1">← Today!</span>}</h3>
+                <p class="text-sm text-muted">{s.location}</p>
+              </div>
             </div>
             <span class="text-sm font-mono font-bold text-lime-dark">{s.time}</span>
           </div>
@@ -56,18 +84,19 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
   <!-- Menu -->
   <section id="menu" class="py-16 px-6 bg-dark text-warm-white">
     <div class="mx-auto max-w-4xl">
-      <h2 class="text-3xl font-black text-center text-lime mb-8">The Menu</h2>
+      <h2 class="reveal text-3xl font-black text-center text-lime mb-8">The Menu</h2>
 
       <h3 class="text-lg font-bold text-hot-orange mb-3">🌮 Tacos</h3>
       <div class="grid sm:grid-cols-2 gap-3 mb-8">
         {tacos.map((item) => (
-          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4">
+          <div class={`rounded-xl border p-4 transition-all duration-300 hover:-translate-y-0.5 ${item.spicy ? 'border-hot-orange/40 bg-hot-orange/5 hover:border-hot-orange/60' : 'border-muted/20 bg-dark-lighter hover:border-lime/25'}`}>
             <div class="flex justify-between items-start">
-              <h4 class="font-bold text-warm-white">{item.name} {item.spicy ? '🔥' : ''}</h4>
+              <h4 class="font-bold text-warm-white">{item.name} {item.spicy && <span class="animate-pulse">🔥</span>}</h4>
               <span class="text-lime font-bold">{item.price}</span>
             </div>
             <p class="text-sm text-muted mt-1">{item.description}</p>
-            <button data-add-item data-name={item.name} data-price={item.price.replace('$','')} data-label="Add" class="mt-2 rounded-lg bg-lime/20 text-lime text-xs font-bold px-3 py-1.5 hover:bg-lime/30 transition-colors">Add</button>
+            {item.spicy && <p class="text-xs text-hot-orange mt-2 font-medium">⚠ Seriously spicy. You've been warned.</p>}
+            <button onclick={`window.__addToCart('${item.name}', '${item.price}')`} class="mt-3 rounded-full bg-lime/20 text-lime px-4 py-1.5 text-xs font-bold hover:bg-lime/30 transition-colors">+ Add</button>
           </div>
         ))}
       </div>
@@ -75,13 +104,13 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
       <h3 class="text-lg font-bold text-hot-orange mb-3">🍟 Sides & Dessert</h3>
       <div class="grid sm:grid-cols-2 gap-3 mb-8">
         {sides.map((item) => (
-          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4">
+          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-lime/25">
             <div class="flex justify-between items-start">
               <h4 class="font-bold text-warm-white">{item.name}</h4>
               <span class="text-lime font-bold">{item.price}</span>
             </div>
             <p class="text-sm text-muted mt-1">{item.description}</p>
-            <button data-add-item data-name={item.name} data-price={item.price.replace('$','')} data-label="Add" class="mt-2 rounded-lg bg-lime/20 text-lime text-xs font-bold px-3 py-1.5 hover:bg-lime/30 transition-colors">Add</button>
+            <button onclick={`window.__addToCart('${item.name}', '${item.price}')`} class="mt-3 rounded-full bg-lime/20 text-lime px-4 py-1.5 text-xs font-bold hover:bg-lime/30 transition-colors">+ Add</button>
           </div>
         ))}
       </div>
@@ -89,13 +118,13 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
       <h3 class="text-lg font-bold text-hot-orange mb-3">🥤 Drinks</h3>
       <div class="grid sm:grid-cols-2 gap-3">
         {drinks.map((item) => (
-          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4">
+          <div class="rounded-xl border border-muted/20 bg-dark-lighter p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-lime/25">
             <div class="flex justify-between items-start">
               <h4 class="font-bold text-warm-white">{item.name}</h4>
               <span class="text-lime font-bold">{item.price}</span>
             </div>
             <p class="text-sm text-muted mt-1">{item.description}</p>
-            <button data-add-item data-name={item.name} data-price={item.price.replace('$','')} data-label="Add" class="mt-2 rounded-lg bg-lime/20 text-lime text-xs font-bold px-3 py-1.5 hover:bg-lime/30 transition-colors">Add</button>
+            <button onclick={`window.__addToCart('${item.name}', '${item.price}')`} class="mt-3 rounded-full bg-lime/20 text-lime px-4 py-1.5 text-xs font-bold hover:bg-lime/30 transition-colors">+ Add</button>
           </div>
         ))}
       </div>
@@ -105,7 +134,7 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
   <!-- Order / Delivery -->
   <section id="order" class="py-16 px-6">
     <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-3xl font-black mb-2">Order Delivery</h2>
+      <h2 class="reveal text-3xl font-black mb-2">Order Delivery</h2>
       <p class="text-muted text-sm mb-8">Can't make it to the truck? We deliver through these apps.</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         {DELIVERY.map((app) => (
@@ -132,26 +161,24 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
   <!-- Catering -->
   <section id="catering" class="py-16 px-6">
     <div class="mx-auto max-w-2xl">
-      <h2 class="text-3xl font-black text-center mb-2">Cater Your Event</h2>
+      <h2 class="reveal text-3xl font-black text-center mb-2">Cater Your Event</h2>
       <p class="text-center text-muted text-sm mb-8">Weddings, corporate lunches, birthdays, block parties. We bring the truck to you.</p>
 
-      <div class="rounded-xl border border-dark/10 bg-white p-6 mb-6">
-        <div class="grid sm:grid-cols-3 gap-4 text-center text-sm">
-          <div>
-            <p class="font-bold text-dark text-lg">{CATERING.pricePerPerson}</p>
-            <p class="text-muted">per person</p>
-          </div>
-          <div>
-            <p class="font-bold text-dark text-lg">{CATERING.minGuests}+</p>
-            <p class="text-muted">minimum guests</p>
-          </div>
-          <div>
-            <p class="font-bold text-dark text-lg">All-inclusive</p>
-            <p class="text-muted">setup + cleanup</p>
-          </div>
+      <div class="grid sm:grid-cols-3 gap-3 mb-6">
+        <div class="rounded-xl border-2 border-lime/20 bg-lime/5 p-5 text-center">
+          <p class="text-2xl font-black text-dark">{CATERING.pricePerPerson}</p>
+          <p class="text-sm text-muted mt-1">per person</p>
         </div>
-        <p class="text-sm text-muted mt-4 text-center">{CATERING.includes}</p>
+        <div class="rounded-xl border-2 border-hot-orange/20 bg-hot-orange/5 p-5 text-center">
+          <p class="text-2xl font-black text-dark">{CATERING.minGuests}+</p>
+          <p class="text-sm text-muted mt-1">minimum guests</p>
+        </div>
+        <div class="rounded-xl border-2 border-dark/10 bg-white p-5 text-center">
+          <p class="text-2xl font-black text-dark">✓</p>
+          <p class="text-sm text-muted mt-1">all-inclusive</p>
+        </div>
       </div>
+      <p class="text-sm text-muted text-center mb-6">{CATERING.includes}</p>
 
       <form id="catering-form" class="space-y-4 rounded-xl border border-dark/10 bg-white p-6">
         <div class="grid sm:grid-cols-2 gap-4">
@@ -191,19 +218,6 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
   </section>
 
   <script>
-    document.querySelectorAll('[data-add-item]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const el = btn as HTMLElement;
-        const name = el.dataset.name!;
-        const price = el.dataset.price!;
-        (window as any).addToCart(name, price);
-        el.textContent = 'Added!';
-        setTimeout(() => { el.textContent = el.dataset.label || 'Add'; }, 1000);
-      });
-    });
-  </script>
-
-  <script>
     document.getElementById('catering-form')?.addEventListener('submit', (e) => {
       e.preventDefault()
       const status = document.getElementById('form-status')!
@@ -216,71 +230,49 @@ const drinks = MENU.filter(m => m.category === 'Drinks')
     const chatInput = document.getElementById('chat-input') as HTMLInputElement
     const chatSend = document.getElementById('chat-send')!
     const chatMessages = document.getElementById('chat-messages')!
-    let chatHistory: Array<{ role: string; content: string }> = []
+    const chatQuick = document.getElementById('chat-quick')!
+    const chatHistory: Array<{ role: string; content: string }> = []
     let chatBusy = false
-
-    function addMessage(role: string, text: string) {
+    function escapeHtml(t: string): string { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br />') }
+    function linkify(h: string): string {
+      h = h.replace(/\(864\)\s*555-8274/g, '<a href="tel:+18645558274" class="text-lime underline">(864) 555-8274</a>')
+      h = h.replace(/hello@tacolocogvl\.com/g, '<a href="mailto:hello@tacolocogvl.com" class="text-lime underline">hello@tacolocogvl.com</a>')
+      return h
+    }
+    function addMsg(role: string, text: string) {
       chatMessages.classList.remove('hidden')
-      const wrapper = document.createElement('div')
-      wrapper.className = role === 'user' ? 'flex justify-end' : 'flex justify-start'
+      const el = document.createElement('div')
+      el.className = role === 'user' ? 'flex justify-end' : 'flex justify-start'
       const bubble = document.createElement('div')
       bubble.className = role === 'user'
-        ? 'bg-lime text-dark rounded-2xl rounded-br-sm px-4 py-2 max-w-[80%] text-sm font-bold'
-        : 'bg-dark text-warm-white rounded-2xl rounded-bl-sm px-4 py-2 max-w-[80%] text-sm leading-relaxed border border-muted/20'
-      if (role === 'assistant') {
-        const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        let html = escaped.replace(/\[\[ADD:([^:]+):([^\]]+)\]\]/g, (_, name, price) => {
-          const safeName = name.replace(/'/g, "\\'")
-          return `<button onclick="(window).addToCart('${safeName}', '${price}')" class="inline-block mt-1 px-3 py-1 rounded-lg bg-lime/20 text-lime text-xs font-bold hover:bg-lime/30 transition-colors">+ Add ${name} to cart</button>`
-        })
-        html = html.replace(/\((\d{3})\)\s*(\d{3})-(\d{4})/g, '<a href="tel:$1$2$3" class="underline">($1) $2-$3</a>')
-        html = html.replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, '<a href="mailto:$1" class="underline">$1</a>')
-        bubble.innerHTML = html
-      } else {
-        bubble.textContent = text
-      }
-      wrapper.appendChild(bubble)
-      chatMessages.appendChild(wrapper)
-      chatMessages.scrollTop = chatMessages.scrollHeight
-    }
-
-    function showTyping() {
-      const el = document.createElement('div')
-      el.id = 'typing-indicator'
-      el.className = 'flex justify-start'
-      el.innerHTML = '<div class="bg-dark text-muted rounded-2xl rounded-bl-sm px-4 py-2 text-sm border border-muted/20">Checking...</div>'
+        ? 'bg-lime/15 text-warm-white rounded-xl rounded-tr-sm px-4 py-2.5 max-w-[80%] text-sm leading-relaxed'
+        : 'bg-dark text-warm-white rounded-xl rounded-tl-sm px-4 py-2.5 max-w-[80%] text-sm leading-relaxed'
+      bubble.innerHTML = role === 'user' ? escapeHtml(text) : linkify(escapeHtml(text))
+      el.appendChild(bubble)
       chatMessages.appendChild(el)
       chatMessages.scrollTop = chatMessages.scrollHeight
     }
-
-    async function sendMessage() {
-      const text = chatInput.value.trim()
-      if (!text || chatBusy) return
-      chatBusy = true
-      chatInput.value = ''
-      addMessage('user', text)
-      showTyping()
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text, history: chatHistory }),
-        })
-        const data = await res.json()
-        document.getElementById('typing-indicator')?.remove()
-        const reply = data.reply || "Not sure about that — check our schedule or give us a call!"
-        addMessage('assistant', reply)
-        chatHistory.push({ role: 'user', content: text })
-        chatHistory.push({ role: 'assistant', content: reply })
-        if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20)
-      } catch {
-        document.getElementById('typing-indicator')?.remove()
-        addMessage('assistant', 'Something went wrong. DM us on Instagram!')
-      }
-      chatBusy = false
+    function showTyping() {
+      const el = document.createElement('div'); el.id = 'typing-indicator'; el.className = 'flex justify-start'
+      el.innerHTML = '<div class="bg-dark rounded-xl rounded-tl-sm px-4 py-2.5"><div class="flex gap-1.5 items-center h-5"><span class="w-1.5 h-1.5 rounded-full bg-lime/40 animate-bounce"></span><span class="w-1.5 h-1.5 rounded-full bg-lime/40 animate-bounce" style="animation-delay:.15s"></span><span class="w-1.5 h-1.5 rounded-full bg-lime/40 animate-bounce" style="animation-delay:.3s"></span></div></div>'
+      chatMessages.appendChild(el); chatMessages.scrollTop = chatMessages.scrollHeight
     }
-
-    chatSend.addEventListener('click', sendMessage)
-    chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage() })
+    async function sendChat(text: string) {
+      if (!text || chatBusy) return
+      chatBusy = true; chatInput.value = ''; addMsg('user', text); showTyping()
+      try {
+        const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, history: chatHistory }) })
+        document.getElementById('typing-indicator')?.remove()
+        const data = await res.json()
+        const reply = data.reply || 'Not sure — DM us on Instagram @tacolocogvl!'
+        addMsg('assistant', reply)
+        chatHistory.push({ role: 'user', content: text }); chatHistory.push({ role: 'assistant', content: reply })
+        if (chatHistory.length > 20) chatHistory.splice(0, chatHistory.length - 20)
+      } catch { document.getElementById('typing-indicator')?.remove(); addMsg('assistant', 'Something went wrong. DM us on Instagram!') }
+      chatBusy = false; chatInput.focus()
+    }
+    chatSend.addEventListener('click', () => sendChat(chatInput.value.trim()))
+    chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(chatInput.value.trim()) })
+    document.querySelectorAll('.chat-q').forEach(btn => { btn.addEventListener('click', () => { sendChat((btn as HTMLElement).dataset.msg!); chatQuick.remove() }) })
   </script>
 </Layout>

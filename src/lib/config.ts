@@ -1,10 +1,10 @@
 export const SITE = {
-  name: 'Calico Taco',
-  tagline: 'Street tacos. Real flavor. Find us around town.',
-  url: 'https://calicotaco.com',
-  email: 'hello@calicotaco.com',
+  name: 'Taco Loco',
+  tagline: 'Street tacos. Real flavor. Find us around Greenville.',
+  url: 'https://tacolocogvl.com',
+  email: 'hello@tacolocogvl.com',
   phone: '(864) 555-8274',
-  instagram: '@calicotaco',
+  instagram: '@tacolocogvl',
 } as const
 
 export const MENU = [
@@ -21,13 +21,13 @@ export const MENU = [
 ]
 
 export const SCHEDULE = [
-  { day: 'Monday', location: 'Riverside Trail — near University', time: '11am – 2pm' },
-  { day: 'Tuesday', location: 'Tech Campus — Main Building', time: '11am – 2pm' },
-  { day: 'Wednesday', location: 'Central Park', time: '11:30am – 2pm' },
-  { day: 'Thursday', location: 'Bridge District', time: '11am – 2pm' },
-  { day: 'Friday', location: 'West Village Arts District', time: '5pm – 9pm' },
-  { day: 'Saturday', location: 'Saturday Farmers Market, downtown', time: '9am – 1pm' },
-  { day: 'Sunday', location: 'Trailside Park', time: '12pm – 4pm' },
+  { day: 'Monday', location: 'Swamp Rabbit Trail — near Furman', time: '11am – 2pm' },
+  { day: 'Tuesday', location: 'Greenville Tech — Barton Campus', time: '11am – 2pm' },
+  { day: 'Wednesday', location: 'Unity Park', time: '11:30am – 2pm' },
+  { day: 'Thursday', location: 'Falls Park / Liberty Bridge area', time: '11am – 2pm' },
+  { day: 'Friday', location: 'Village of West Greenville', time: '5pm – 9pm' },
+  { day: 'Saturday', location: 'TD Saturday Market, downtown', time: '9am – 1pm' },
+  { day: 'Sunday', location: 'Travelers Rest — Trailblazer Park', time: '12pm – 4pm' },
 ]
 
 export const DELIVERY = [
